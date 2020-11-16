@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boxfuse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boxfuse
+  template:
+    metadata:
+      labels:
+        app: boxfuse
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: boxfuse
+        image: pocregistry600675.azurecr.io/azurehttpd
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boxfuse
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: boxfuse
